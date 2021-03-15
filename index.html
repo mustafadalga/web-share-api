@@ -43,11 +43,13 @@
     function share() {
         let data = getFormData()
         if (isSupportShareFile(data.file)) {
+            alert("if")
             navigator.share(data)
                 .then(() => console.log('Successful share'))
                 .catch((error) => console.log('Error sharing', error));
         } else if (navigator.share) {
             delete data["file"]
+            alert("else if")
             navigator.share(data)
                 .then(() => console.log('Successful share'))
                 .catch((error) => console.log('Error sharing', error));
