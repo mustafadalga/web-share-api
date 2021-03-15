@@ -10,15 +10,16 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container p-5">
+        <h3 class="text-primary text-center">Web Share API </h3>
         <form>
             <div class="form-group">
                 <label>Title</label>
                 <input type="text" class="form-control" id="title" value="Default Title">
             </div>
             <div class="form-group">
-                <label>Message</label>
-                <input type="text" class="form-control" id="text" value="Default Message">
+                <label>Text</label>
+                <input type="text" class="form-control" id="text" value="Default Text">
             </div>
             <div class="form-group">
                 <label>Url</label>
@@ -28,36 +29,35 @@
                 <label>File</label>
                 <input id="file" type="file">
             </div>
-            <div class="form-group">
-                <button onclick="share()" type="button">Share</button>
+            <div class="form-group text-center">
+                <button class="btn btn-primary " onclick="share()" type="button">Share</button>
             </div>
         </form>
+        <h5 class="text-info text-center warning"></h5>
     </div>
-
-
 </body>
 
 </html>
 
 <script>
+    let warning = document.querySelector(".warning")
     async function share() {
+        clearLogWarning()
         let data = getFormData()
-        console.log(data)
+
         if (isSupportShareFile(data.files)) {
-            alert("if")
             await navigator.share(data)
-                .then(() => console.log('Successful share'))
-                .catch((error) => console.log('Error sharing', error));
+                .then(() => createLogWarning('Successful share'))
+                .catch((error) => createLogWarning(`Error sharing: ${error}`));
         } else if (navigator.share) {
             delete data["file"]
-            alert("else if")
             await navigator.share(data)
-                .then(() => console.log('Successful share'))
-                .catch((error) => console.log('Error sharing', error));
+                .then(() => createLogWarning('Successful share'))
+                .catch((error) => createLogWarning(`Error sharing: ${error}`));
+        } else {
+            createLogWarning("Web Share API is not supports in your browser.")
         }
-
     }
-
 
     function getFormData() {
         const title = document.querySelector("#title").value;
@@ -76,5 +76,13 @@
         return navigator.canShare && navigator.canShare({
             files
         })
+    }
+
+    function createLogWarning(text) {
+        warning.textContent = text
+    }
+
+    function clearLogWarning() {
+        warning.textContent = ""
     }
 </script>
